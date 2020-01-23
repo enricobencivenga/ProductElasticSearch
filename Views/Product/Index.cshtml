@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Product>
+@inject IOptionsSnapshot<ProductSettings> settings
+@{
+    int currentPage = int.Parse(ViewContext.RouteData.Values["page"] as string ?? "0");
+    ViewData["Title"] = "Home Page";
+}
+<div class="text-center">
+    <h1 class="display-4">Products ElasticSearch</h1>
+</div>
+<p>
+    In this page you are able to:
+    <ul>
+        <li>import N products by typing a number (please not too big!) in input text below and clicking <i>Import Products</i> button</li>
+        <li>search for inserted products with ElasticSearch by typing into search bar (almost 2 characters)</li>
+        <li>manage product in table below</li>
+        <li>reindex all products inserted in ElasticSearch by clicking <i>ReIndex Products</i> button</li>
+    </ul>
+</p>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label for="txt-product-count">Product count:</label>
+            <input id="txt-product-count" class="form-control form-control-sm" type="number" />
+            <p class="text-danger txt-product-count-error">Inserire un numero valido</p>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary btn-sm btn-product-import">Import Products</button>
+            <button class="btn btn-warning btn-sm btn-product-reindex">ReIndex Products</button>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-12">
+        <h3>Products</h3>
+    </div>
+    <div class="col-12">
+        <div class="btn-group">
+            <button class="btn btn-success btn-sm btn-product-create">New Product</button>
+        </div>
+    </div>
+    <div class="col-12">
+
+        <table class="table table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>EAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>
+                            <a class="text-dark btn-product-edit" href="#" data-id="@product.Id">Edit</a>
+                            <a class="text-dark btn-product-delete" href="#" data-id="@product.Id">Delete</a>
+                        </td>
+                        <td>
+                            @product.Name
+                        </td>
+                        <td>
+                            @product.Brand
+                        </td>
+                        <td>
+                            @product.Category
+                        </td>
+                        <td>
+                            @product.Ean
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <nav class="pagination container" aria-label="Pagination">
+            @if (Model.Any())
+            {
+                <a rel="prev" href="@ViewData["prev"]" title="Previous page">&laquo; Older</a>
+            }
+            @if (currentPage > 0)
+            {
+                <a rel="next" href="@ViewData["next"]" title="Next page">Newer &raquo;</a>
+            }
+            <br /><br />
+            @section Head {
+                @if (Model.Any())
+                {
+                    <link rel="prev" href="@ViewData["prev"]" />
+                }
+                @if (currentPage > 0)
+                {
+                    <link rel="next" href="@ViewData["next"]" />
+                }
+            }
+        </nav>
+    </div>
+</div>
+@section Scripts{
+
+}
